@@ -87,17 +87,23 @@ if (statsSection) {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
                 const targetId = this.getAttribute('href');
-                if (targetId === '#') return;
+                if (!targetId || targetId === '#') return;
+
+                // إغلاق قائمة الجوال عند الضغط على أي رابط
+                const navMenu = document.getElementById('navMenu');
+                if (navMenu) navMenu.classList.remove('active');
+
                 if (targetId === '#home') {
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                     return;
                 }
+
                 const targetElement = document.querySelector(targetId);
                 if (targetElement) {
                     const header = document.querySelector('.main-header');
                     const headerHeight = header ? header.offsetHeight : 70;
-                    const top = targetElement.getBoundingClientRect().top + window.scrollY - headerHeight;
-                    window.scrollTo({ top, behavior: 'smooth' });
+                    const top = targetElement.getBoundingClientRect().top + window.scrollY - headerHeight - 10;
+                    window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
                 }
             });
         });
@@ -144,20 +150,24 @@ if (statsSection) {
         function updateActiveNav() {
             const header = document.querySelector('.main-header');
             const headerHeight = header ? header.offsetHeight : 70;
-            const scrollY = window.scrollY + headerHeight + 50;
+            const scrollY = window.scrollY + headerHeight + 20;
 
             let currentSection = 'home';
             navSections.forEach(id => {
                 const section = document.getElementById(id);
-                if (section && section.offsetTop <= scrollY) {
-                    currentSection = id;
+                if (section) {
+                    // getBoundingClientRect + scrollY يعطي الموضع المطلق من أعلى الصفحة
+                    const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+                    if (sectionTop <= scrollY) {
+                        currentSection = id;
+                    }
                 }
             });
 
             navLinks.forEach(link => {
                 link.classList.remove('active');
                 const href = link.getAttribute('href');
-                if (href === '#' + currentSection || (href === '#home' && currentSection === 'home')) {
+                if (href === '#' + currentSection) {
                     link.classList.add('active');
                 }
             });
