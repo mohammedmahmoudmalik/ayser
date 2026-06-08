@@ -88,6 +88,10 @@ if (statsSection) {
                 e.preventDefault();
                 const targetId = this.getAttribute('href');
                 if (targetId === '#') return;
+                if (targetId === '#home') {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    return;
+                }
                 const targetElement = document.querySelector(targetId);
                 if (targetElement) {
                     const header = document.querySelector('.main-header');
