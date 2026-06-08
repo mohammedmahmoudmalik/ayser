@@ -132,3 +132,32 @@ if (statsSection) {
         window.addEventListener('load', function() {
             createInnovationParticles();
         });
+
+        // تغيير العنصر النشط في الشريط عند التمرير
+        const navSections = ['home', 'about', 'products', 'inventions', 'team', 'achievements', 'partners', 'contact'];
+        const navLinks = document.querySelectorAll('.nav-menu a');
+
+        function updateActiveNav() {
+            const header = document.querySelector('.main-header');
+            const headerHeight = header ? header.offsetHeight : 70;
+            const scrollY = window.scrollY + headerHeight + 50;
+
+            let currentSection = 'home';
+            navSections.forEach(id => {
+                const section = document.getElementById(id);
+                if (section && section.offsetTop <= scrollY) {
+                    currentSection = id;
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                const href = link.getAttribute('href');
+                if (href === '#' + currentSection || (href === '#home' && currentSection === 'home')) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', updateActiveNav);
+        updateActiveNav();
